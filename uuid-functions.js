@@ -39,7 +39,7 @@ const generateNoteDOM = function (item) {
     // create all elements 
     const noteEl = document.createElement('div')
     const button = document.createElement('button')
-    const textEl = document.createElement('span')
+    const textEl = document.createElement('a')
 
     // set up remove button
 
@@ -54,6 +54,7 @@ const generateNoteDOM = function (item) {
 
     // set up note title text
 
+    textEl.setAttribute('href', `/edit.html#${item.id}`)
     if (item.title.length > 0) {
         textEl.textContent = item.title
     } else {
@@ -67,9 +68,60 @@ const generateNoteDOM = function (item) {
 }
 
 
+
+// sort notes function
+
+const sortNotes = function (notes, sortBy) {
+    if (sortBy === 'byEdited') {
+        return notes.sort(function (a, b) {
+            if (a.updatedAt > b.updatedAt) {
+                return -1
+            } else if (a.updatedAt < b.updatedAt) {
+                return 1
+            } else {
+                return 0
+            }
+        })
+    } else if (sortBy === 'byCreated') {
+        return notes.sort(function (a, b) {
+            if (a.createdAt > b.createdAt) {
+                return -1
+            } else if (a.createdAt < b.createdAt) {
+                return 1
+            } else {
+                return 0
+            }
+
+        })
+
+    } else if (sortBy === 'alphabetical') {
+        notes.sort(function (a, b) {
+            if (a.title.toLowerCase() < b.title.toLowerCase()) {
+                return -1
+            } else if (a.title.toLowerCase() > b.title.toLowerCase()) {
+                return 1
+            } else {
+                return 0
+            }
+        })
+
+    } else {
+        return notes
+    }
+}
+
+
+
+
+
 // renderNotes based on searches
 
 const renderNotes = function (arrayToBeSearched, filterArray) {
+
+    // call sortNotes function
+
+    notes = sortNotes(notes, filters.sortBy)
+
     // dynamically filter notes
     const filteredNotes = arrayToBeSearched.filter(function (item) {
         return item.title.toLowerCase().includes(filterArray.searchText.toLowerCase())
@@ -84,4 +136,9 @@ const renderNotes = function (arrayToBeSearched, filterArray) {
         document.querySelector('#noteDiv').appendChild(noteEl)
 
     })
+}
+
+// Generate the last edited message 
+const lastEditMessage = function (timestamp) {
+    return `Last edited ${moment(timestamp).fromNow()} ago`
 }
