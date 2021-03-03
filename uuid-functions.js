@@ -1,6 +1,6 @@
 // check for data held in local storage
 
-const getSavedNotes = function () {
+const getSavedNotes = () => {
 
     const notesJSON = localStorage.getItem('notes')
 
@@ -13,17 +13,16 @@ const getSavedNotes = function () {
 
 // Save Notes To Local Storage
 
-const saveNotes = function (notes) {
+const saveNotes = (notes) => {
     localStorage.setItem('notes', JSON.stringify(notes))
 }
 
 
 // removeNote function 
 
-const removeNote = function (id) {
-    const noteIndex = notes.findIndex(function (item) {
-        return item.id === id
-    })
+const removeNote = (id) => {
+
+    const noteIndex = notes.findIndex((item) => item.id === id)
 
     if (noteIndex > -1) {
         notes.splice(noteIndex, 1)
@@ -34,7 +33,7 @@ const removeNote = function (id) {
 
 // generate DOM for each note
 
-const generateNoteDOM = function (item) {
+const generateNoteDOM = (item) => {
 
     // create all elements 
     const noteEl = document.createElement('div')
@@ -45,7 +44,7 @@ const generateNoteDOM = function (item) {
 
     button.textContent = 'x'
     noteEl.appendChild(button)
-    button.addEventListener('click', function () {
+    button.addEventListener('click', () => {
         removeNote(item.id)
         saveNotes(notes)
         renderNotes(notes, filters) // wny am i calling this function within the function!?
@@ -71,9 +70,9 @@ const generateNoteDOM = function (item) {
 
 // sort notes function
 
-const sortNotes = function (notes, sortBy) {
+const sortNotes = (notes, sortBy) => {
     if (sortBy === 'byEdited') {
-        return notes.sort(function (a, b) {
+        return notes.sort((a, b) => {
             if (a.updatedAt > b.updatedAt) {
                 return -1
             } else if (a.updatedAt < b.updatedAt) {
@@ -83,7 +82,7 @@ const sortNotes = function (notes, sortBy) {
             }
         })
     } else if (sortBy === 'byCreated') {
-        return notes.sort(function (a, b) {
+        return notes.sort((a, b) => {
             if (a.createdAt > b.createdAt) {
                 return -1
             } else if (a.createdAt < b.createdAt) {
@@ -93,9 +92,8 @@ const sortNotes = function (notes, sortBy) {
             }
 
         })
-
     } else if (sortBy === 'alphabetical') {
-        notes.sort(function (a, b) {
+        notes.sort((a, b) => {
             if (a.title.toLowerCase() < b.title.toLowerCase()) {
                 return -1
             } else if (a.title.toLowerCase() > b.title.toLowerCase()) {
@@ -116,22 +114,20 @@ const sortNotes = function (notes, sortBy) {
 
 // renderNotes based on searches
 
-const renderNotes = function (arrayToBeSearched, filterArray) {
+const renderNotes = (arrayToBeSearched, filterArray) => {
 
     // call sortNotes function
 
     notes = sortNotes(notes, filters.sortBy)
 
     // dynamically filter notes
-    const filteredNotes = arrayToBeSearched.filter(function (item) {
-        return item.title.toLowerCase().includes(filterArray.searchText.toLowerCase())
-    })
+    const filteredNotes = arrayToBeSearched.filter((item) => item.title.toLowerCase().includes(filterArray.searchText.toLowerCase()))
 
     // clear contents of DIV
 
     document.querySelector('#noteDiv').innerHTML = ''
 
-    filteredNotes.forEach(function (item) {
+    filteredNotes.forEach((item) => {
         const noteEl = generateNoteDOM(item)
         document.querySelector('#noteDiv').appendChild(noteEl)
 
@@ -139,6 +135,4 @@ const renderNotes = function (arrayToBeSearched, filterArray) {
 }
 
 // Generate the last edited message 
-const lastEditMessage = function (timestamp) {
-    return `Last edited ${moment(timestamp).fromNow()} ago`
-}
+const lastEditMessage = (timestamp) => `Last edited ${moment(timestamp).fromNow()} ago`
