@@ -4,11 +4,12 @@ const getSavedNotes = () => {
 
     const notesJSON = localStorage.getItem('notes')
 
-    if (notesJSON !== null) {
-        return JSON.parse(notesJSON)
-    } else {
+    try {
+        return notesJSON ? JSON.parse(notesJSON) : []
+    } catch {
         return []
     }
+
 }
 
 // Save Notes To Local Storage
@@ -33,7 +34,7 @@ const removeNote = (id) => {
 
 // generate DOM for each note
 
-const generateNoteDOM = (item) => {
+function generateNoteDOM(item) {
 
     // create all elements 
     const noteEl = document.createElement('div')
@@ -41,7 +42,6 @@ const generateNoteDOM = (item) => {
     const textEl = document.createElement('a')
 
     // set up remove button
-
     button.textContent = 'x'
     noteEl.appendChild(button)
     button.addEventListener('click', () => {
@@ -52,7 +52,6 @@ const generateNoteDOM = (item) => {
 
 
     // set up note title text
-
     textEl.setAttribute('href', `/edit.html#${item.id}`)
     if (item.title.length > 0) {
         textEl.textContent = item.title
